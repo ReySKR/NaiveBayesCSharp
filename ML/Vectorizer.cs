@@ -28,6 +28,7 @@ namespace NaiveBayes.ML
             {
                 countVector[i] = new Vector(initializer.Item1);
             }
+            //Initilieseren des Statischen Vektor zur Erkennung der Wörter
             Vector.initializeComponents(initializer.Item2);
             //isPositive Array für Zuordnung intialisieren 
             isPositive = new bool[textLabelPair.Count];

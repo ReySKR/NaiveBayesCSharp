@@ -10,11 +10,18 @@ namespace NaiveBayes.ML
     public class MultinomialNB
     {
         
-        Vectorizer vectorizedData;
+        private Vectorizer vectorizedData;
+        //Anzahl der Sätze je Condition
         private double priorPositiveFeatures;
         private double priorNegativeFeatures;
+        //Anzahl der Wörter je Condition
         private Vector priorPositiveConditionals;
         private Vector priorNegativeConditionals;
+        //Anzahl der Wörter gesamt je Condition
+        private int countPositiveWords;
+        private int countNegativeWords;
+
+
 
         public MultinomialNB(Vectorizer tVectorizer)
         {
@@ -22,7 +29,7 @@ namespace NaiveBayes.ML
             priorPositiveConditionals = new Vector(vectorizedData.countVector[0].vector.Length);
             priorNegativeConditionals = new Vector(vectorizedData.countVector[0].vector.Length);
 
-            //Berechnung der Priorwahrscheinlichkeit der Labels
+            //Berechnung der Priorwahrscheinlichkeit der Features
             for (int i = 0; i < vectorizedData.isPositive.Length; i++)
             {
                 if (vectorizedData.isPositive[i] == true) {
@@ -37,7 +44,7 @@ namespace NaiveBayes.ML
 
         public void fit()
         {
-            //Zählen aller Wörter, welche positive Features enthalten
+            //Zählen aller Wörter
             //Für jedes Feature
             for (int i = 0; i < vectorizedData.countVector.Length; i++)
             {
@@ -55,6 +62,26 @@ namespace NaiveBayes.ML
                     }
                 }
             }
+
+            
+            //Es wird jeweils ein alpha = 1 addiert, somit erhalten wir nie eine Wahrscheinlichkeit von 0 bei beibehaltung des Verhältnisses
+            //Sofern im folgenden natürlich Gesamtanzahl angepasst wird -> dh. tatsächliche Anzahl + Anzahl der Wörter (da auf jedes Wort eines Addiert wird)
+            
+                for (int k = 0; k < Vector.componentDefinition.Length; k++)
+                {
+                    priorPositiveConditionals.vector[k]++;
+                    priorNegativeConditionals.vector[k]++;
+                }
+            
+            
+
+            //Zählen aller Wörter im Gesamten
+            for (int i = 0; i < priorPositiveConditionals.vector.Length; i++)
+            {
+                countPositiveWords += priorPositiveConditionals.vector[i];
+                countNegativeWords += priorNegativeConditionals.vector[i];
+            }
+
         }
 
         public void predict(string sentence)
@@ -72,20 +99,27 @@ namespace NaiveBayes.ML
             for (int i = 0; i < words.Length; i++)
             {
                 //Index des Wortes in jeweilgen Vektoren
-                int wordIndex = 0;
+                int wordIndex = -1;
                 //Im Vector der gezählten Wörter nach jeweiligem Count nachsehen
-                for (int k = 0; k < vectorizedData.countVector.Length; k++)
+                for (int k = 0; k < Vector.componentDefinition.Length; k++)
                 {
+                    
                     if (Vector.componentDefinition[k] == words[i].ToLower())
                     {
                         wordIndex= k;
                     }
                 }
+                //Falls wort nicht gefunden
+                if (wordIndex == -1) {
+                    continue;
+                }
+
                 //Neuberechnung der jeweiligen Wahrscheinlichkeit für positive und negative
-                double pos = Convert.ToDouble(priorPositiveConditionals.vector[wordIndex]);
-                positiveProbabilities *= Convert.ToDouble(priorPositiveConditionals.vector[wordIndex]) / Convert.ToDouble(priorPositiveFeatures);
-                double neg = Convert.ToDouble(priorNegativeConditionals.vector[wordIndex]);
-                negativeProbabilities *= Convert.ToDouble(priorNegativeConditionals.vector[wordIndex]) / Convert.ToDouble(priorNegativeFeatures);
+                //Es könnte jeweils ein alpha = 1 addiert, somit erhalten wir nie eine Wahrscheinlichkeit von 0 bei beibehaltung des Verhältnisses
+                double posCount = Convert.ToDouble(priorPositiveConditionals.vector[wordIndex]);
+                positiveProbabilities *= posCount / Convert.ToDouble(countPositiveWords);
+                double negCount = Convert.ToDouble(priorNegativeConditionals.vector[wordIndex]);
+                negativeProbabilities *= negCount / Convert.ToDouble(countNegativeWords);
             }
 
             //Vergleich der Wahrscheinlichkeiten des Aufkommens
@@ -101,7 +135,7 @@ namespace NaiveBayes.ML
 
             if(positiveProbabilities == negativeProbabilities)
             {
-                Console.WriteLine("Das Ergebnis ist nicht eindeutig");
+                Console.WriteLine("Ich fand ihn langweilig");
             }
         }
 

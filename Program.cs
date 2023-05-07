@@ -15,7 +15,7 @@ namespace NaiveBayes
             Vectorizer vc = new Vectorizer(result);
             MultinomialNB nb = new MultinomialNB(vc);
             nb.fit();
-            nb.predict("Das Buch war absolut fesselnd und ich konnte nicht aufhören zu lesen!");
+            nb.predict("Das Buch war enttäuschend");
 
 
         }
