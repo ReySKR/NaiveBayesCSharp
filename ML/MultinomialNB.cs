@@ -135,7 +135,7 @@ namespace NaiveBayes.ML
 
             if(positiveProbabilities == negativeProbabilities)
             {
-                Console.WriteLine("Ich fand ihn langweilig");
+                Console.WriteLine("Das Ergebnis ist ungenau");
             }
         }
 
