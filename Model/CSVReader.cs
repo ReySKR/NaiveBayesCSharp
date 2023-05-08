@@ -44,7 +44,19 @@ namespace NaiveBayes.Model
             foreach (string line in csvByLines)
             {
                 seperatedString = line.ToLower().Split(",");
-                textLabelPair.Add(seperatedString[0], seperatedString[1] == _labelIdentity ? true : false);
+                try
+                {
+                    textLabelPair.Add(seperatedString[0], seperatedString[1] == _labelIdentity ? true : false);
+                }
+                catch (Exception)
+                {
+                    textLabelPair.Remove(seperatedString[0]);
+
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("DUPLICATE FOUND");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                
             }
 
             return textLabelPair;

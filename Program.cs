@@ -15,7 +15,11 @@ namespace NaiveBayes
             Vectorizer vc = new Vectorizer(result);
             MultinomialNB nb = new MultinomialNB(vc);
             nb.fit();
-            nb.predict("Das Buch war enttäuschend");
+            while (true)
+            {
+                Console.WriteLine("Gebe Satz ein:");
+                nb.predict(Console.ReadLine());
+            }
 
 
         }
