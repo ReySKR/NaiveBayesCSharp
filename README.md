@@ -9,4 +9,4 @@ I coded this back then for my last presentation in order to get the Abitur (gene
 # Dataset
 This contains the <a href="https://www.cs.cornell.edu/people/pabo/movie-review-data/rt-polaritydata.README.1.0.txt">polarity dataset</a> v1.0 from <a href="https://www.cs.cornell.edu/people/pabo/movie-review-data/">Moview Review Data</a> originally created by Bo Pang and Lillian Lee.
 
-Hint: Today (around 3 years later) I'm not sure how good this was implemented so take this with a grain of salt. But besides that, have fun with it! ;)
+Hint: Today I'm not sure how good this was implemented so take this with a grain of salt. But besides that, have fun with it! ;)
